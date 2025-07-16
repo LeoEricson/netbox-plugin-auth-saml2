@@ -90,7 +90,10 @@ PLUGINS_CONFIG = {
             # Groups must be created beforehand in NetBox.
             'GROUP_MAPPINGS': {
                 'saml-group3': 'netbox-group'
-            }
+            },
+            # Regex pattern to match groups for sync. Optional.
+            # Groups must be created beforehand in NetBox.
+            'GROUP_REGEX_PATTERN': r'^Netbox-.*'
         }
     }
 }
