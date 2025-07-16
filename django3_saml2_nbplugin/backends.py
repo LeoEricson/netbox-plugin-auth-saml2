@@ -182,6 +182,17 @@ class SAML2CustomAttrUserBackend(RemoteUserBackend):
                 if saml_group in ident_groups:
                     user_groups.append(Group.objects.get(name=django_group))
             user.groups.set(user_groups)
+        if "GROUP_REGEX_PATTERN" in be_settings and "GROUP_ATTR" in be_settings:
+            group_regex_pattern = be_settings["GROUP_REGEX_PATTERN"]
+            user_groups = []
+            for group_name in ident_groups:
+                if re.match(group_regex_pattern, group_name):
+                    try:
+                        user_groups.append(Group.objects.get(name=group_name))
+                    except Group.DoesNotExist:
+                        # Group does not exist in Netbox, skip it
+                        continue
+            user.groups.set(user_groups)
         user.save()
 
         # call Netbox superclass for further processing of REMOTE_AUTH_xxx variables.
